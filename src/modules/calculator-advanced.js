@@ -7,7 +7,7 @@
 /**
  * РАСЧЁТ ВРЕМЕНИ ПЕЧАТИ (FDM)
  */
-window.CalculatorFD = {
+window.CalculatorFDM = {
     calculatePrintTime: function(model, printer, settings) {
         // Базовое время из слайсера (если есть)
         if (model.slicerTime) {
