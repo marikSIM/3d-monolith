@@ -12712,6 +12712,30 @@ window.visualize3DModel = function(result) {
         hintEl.style.display = 'block';
         hintEl.innerHTML = '🔵 STL: геометрия модели (100% заполнение) — реальный расход зависит от настроек слайсера';
     }
+    
+    // 🔧 РАСЧЁТ ПРИБЛИЗИТЕЛЬНОГО ВРЕМЕНИ ПЕЧАТИ (как в слайсерах)
+    // Формула: объём / (скорость экструзии × коэффициент)
+    const volumeCm3 = window.realVol || 0;
+    const layerHeight = parseFloat(document.getElementById('layer')?.value) || 0.2;
+    const infill = parseFloat(document.getElementById('infill')?.value) || 20;
+    const printSpeed = 50; // мм/с (средняя)
+    
+    // Эмпирическая формула (как в Cura/Orca):
+    // Время (часы) = объём (см³) × коэффициент / (инфилл% × скорость)
+    const coefficient = 1.5; // эмпирический коэффициент
+    const printTimeHours = (volumeCm3 * coefficient) / ((infill / 100) * printSpeed * 10);
+    
+    console.log('📊 [STL] Расчётное время:', printTimeHours.toFixed(2), 'ч (', 
+                Math.floor(printTimeHours * 60), 'мин )');
+    
+    // Обновляем поле времени
+    const manualTimeInput = document.getElementById('manual-time');
+    if (manualTimeInput && printTimeHours > 0) {
+        const hours = Math.floor(printTimeHours);
+        const minutes = Math.round((printTimeHours - hours) * 60);
+        manualTimeInput.value = hours > 0 ? `${hours}ч ${minutes}м` : `${minutes} мин`;
+        console.log('✅ manual-time обновлён:', manualTimeInput.value);
+    }
 };
 
 window.focusCameraOnModel = function(geometry) {
