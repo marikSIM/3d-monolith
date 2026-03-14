@@ -12289,10 +12289,52 @@ window.addEventListener('DOMContentLoaded', function() {
     });
 });
 
+// 🔧 ФУНКЦИЯ ОЧИСТКИ КАЛЬКУЛЯТОРА
+window.clearCalculator = function() {
+    console.log('🧹 [Clear] Очистка калькулятора...');
+    
+    // Сброс статистики
+    const fields = {
+        'st-w-net': '0 г',
+        'st-w-total': '0 г',
+        'st-v': '0 см³',
+        'st-dims': '0 x 0 x 0 мм',
+        'price-val': '0 ₽',
+        'profit-val': '0',
+        'manual-time': ''
+    };
+    
+    for (const [id, value] of Object.entries(fields)) {
+        const el = document.getElementById(id);
+        if (el) {
+            if (el.tagName === 'INPUT') {
+                el.value = value;
+            } else {
+                el.textContent = value;
+            }
+        }
+    }
+    
+    // Скрыть profit-box
+    const profitBox = document.getElementById('profit-box');
+    if (profitBox) profitBox.style.opacity = '0';
+    
+    // Сброс переменных
+    window.realVol = 0;
+    window.modelSize = {x: 0, y: 0, z: 0};
+    window.currentVol = 0;
+    window.currentWeight = 0;
+    
+    console.log('✅ [Clear] Калькулятор очищен');
+}
+
 // ===== ЗАГРУЗКА И ВИЗУАЛИЗАЦИЯ G-КОДА =====
 window.loadGCodeFile = async function(event) {
     const file = event.target.files[0];
     if (!file) return;
+
+    // 🔧 ОЧИСТКА ПЕРЕД ЗАГРУЗКОЙ
+    window.clearCalculator();
 
     console.log('📄 [GCode] Загрузка файла:', file.name);
     showNotification('⏳ Загрузка G-кода...', 'info');
@@ -12471,20 +12513,23 @@ function parsePrintTime(timeStr) {
 
 // ===== УНИВЕРСАЛЬНАЯ ЗАГРУЗКА 3D ФАЙЛОВ =====
 window.loadUniversal3DFile = async function(file) {
+    // 🔧 ОЧИСТКА ПЕРЕД ЗАГРУЗКОЙ
+    window.clearCalculator();
+
     console.log('📦 [3D] Загрузка файла:', file.name);
-    
+
     // Проверка имени файла на кириллицу и специальные символы
     const hasCyrillic = /[\u0400-\u04FF]/.test(file.name);
     const hasSpecialChars = /[<>:"|?*]/.test(file.name);
-    
+
     if (hasSpecialChars) {
         showNotification('⚠️ Имя файла содержит недопустимые символы', 'warning');
     }
-    
+
     if (hasCyrillic) {
         console.log('🔤 [3D] Файл содержит кириллицу в имени, обработка...');
     }
-    
+
     showNotification('⏳ Загрузка 3D модели...', 'info');
     
     try {
@@ -13845,11 +13890,14 @@ window.addToBox = function() {
 
 // 3. Расчёт SLA файлов
 window.calculateSLAFile = function() {
+    // 🔧 ОЧИСТКА ПЕРЕД РАСЧЁТОМ
+    window.clearCalculator();
+
     console.log('🔍 [SLA] calculateSLAFile вызвана');
-    
+
     const fileInput = document.getElementById('sla-file-input');
     console.log('🔍 [SLA] fileInput:', fileInput);
-    
+
     if (!fileInput || !fileInput.files[0]) {
         console.log('⚠️ [SLA] Файл не выбран');
         showToast('⚠️ Выберите файл для расчёта (PWMO, CTB, PHOTON...)', 'warning');
