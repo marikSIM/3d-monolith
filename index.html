@@ -12445,18 +12445,32 @@ window.loadGCodeFile = async function(event) {
         // 🔧 РАСЧЁТ КАК В ORCA SLICER:
         // Диаметр прутка: 1.75 мм
         // Сечение: π × (d/2)² = 2.405 мм²
-        // Плотность PLA: 1.04 г/см³ (как в Orca Slicer!)
         
         const filamentDiameter = 1.75; // мм
         const filamentCrossSection = Math.PI * Math.pow(filamentDiameter / 2, 2); // 2.405 мм²
         const filamentVolumeMm3 = pathLength * filamentCrossSection; // мм³
         const filamentVolumeCm3 = filamentVolumeMm3 / 1000; // см³
-        const filamentWeight = filamentVolumeCm3 * 1.04; // г (плотность как в Orca!)
+        
+        // 🔧 ПЛОТНОСТЬ МАТЕРИАЛА (как в Orca Slicer):
+        // PLA: 1.04 г/см³ (эффективная, не физическая!)
+        // ABS: 1.24 г/см³ (эффективная, не физическая!)
+        // PETG: 1.27 г/см³
+        // Получаем из выбранного материала
+        const matSelect = document.getElementById('mat');
+        let density = 1.04; // PLA по умолчанию
+        
+        if (matSelect && matSelect.value) {
+            const matParts = matSelect.value.split('|');
+            density = parseFloat(matParts[0]) || 1.04;
+        }
+        
+        const filamentWeight = filamentVolumeCm3 * density; // г
         
         console.log('📊 [GCode] Длина пути:', pathLength.toFixed(0), 'мм (', (pathLength/1000).toFixed(2), 'м )');
         console.log('📊 [GCode] Сечение прутка:', filamentCrossSection.toFixed(3), 'мм²');
         console.log('📊 [GCode] Объём:', filamentVolumeCm3.toFixed(2), 'см³');
-        console.log('📊 [GCode] Вес:', filamentWeight.toFixed(1), 'г (Orca: ', (filamentWeight * 0.98).toFixed(1), 'г)');
+        console.log('📊 [GCode] Плотность:', density, 'г/см³');
+        console.log('📊 [GCode] Вес:', filamentWeight.toFixed(1), 'г');
 
         if (volumeInput) {
             volumeInput.textContent = filamentVolumeCm3.toFixed(2) + ' см³';
