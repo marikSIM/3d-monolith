@@ -6558,13 +6558,13 @@ window.worker.onmessage = function(e) {
     }
 
     console.log("✅ Данные от воркера получены:", {
-        объём: (d.vol / 1000).toFixed(2) + " см³",
+        объём: d.vol.toFixed(2) + " см³",
         треугольники: d.pts ? (d.pts.length / 18) : 0
     });
 
     // Сохранение данных модели
-    // 🔧 ПРЕОБРАЗУЕМ мм³ в см³ (делим на 1000)
-    window.realVol = d.vol / 1000;
+    // 🔧 Воркер уже присылает см³ — НЕ делим!
+    window.realVol = d.vol;
     window.modelSize = {
         x: (d.max[0] - d.min[0]).toFixed(1),
         y: (d.max[1] - d.min[1]).toFixed(1),
@@ -6614,6 +6614,29 @@ window.worker.onmessage = function(e) {
     if (volDisplay) {
         volDisplay.textContent = `${window.realVol.toFixed(2)} см³`;
     }
+    
+    // 🔧 ЗАПИСЬ В ПАНЕЛЬ СТАТИСТИКИ
+    const stVol = document.getElementById('st-v');
+    const stWeight = document.getElementById('st-w-total');
+    const stDims = document.getElementById('st-dims');
+    
+    if (stVol) {
+        stVol.textContent = window.realVol.toFixed(2) + ' см³';
+    }
+    if (stWeight) {
+        // Расчёт веса: объём × плотность (PLA = 1.24 г/см³)
+        const weight = window.realVol * 1.24;
+        stWeight.textContent = weight.toFixed(1) + ' г';
+    }
+    if (stDims) {
+        stDims.textContent = `${window.modelSize.x} x ${window.modelSize.y} x ${window.modelSize.z} мм`;
+    }
+    
+    console.log('✅ [STL] Панель обновлена:', {
+        объём: window.realVol.toFixed(2) + ' см³',
+        вес: (window.realVol * 1.24).toFixed(1) + ' г',
+        габариты: `${window.modelSize.x} x ${window.modelSize.y} x ${window.modelSize.z} мм`
+    });
 };
 
 // Обработчик ошибок воркера
