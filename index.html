@@ -12361,6 +12361,15 @@ window.loadGCodeFile = async function(event) {
 
     // 🔧 ОЧИСТКА ПЕРЕД ЗАГРУЗКОЙ
     window.clearCalculator();
+    
+    // 🔧 ОЧИСТКА 3D СЦЕНЫ (удаляем STL модель)
+    if (window.scene && window.current3DMesh) {
+        window.scene.remove(window.current3DMesh);
+        if (window.current3DMesh.geometry) window.current3DMesh.geometry.dispose();
+        if (window.current3DMesh.material) window.current3DMesh.material.dispose();
+        window.current3DMesh = null;
+        console.log('🧹 [3D] STL модель удалена из сцены');
+    }
 
     console.log('📄 [GCode] Загрузка файла:', file.name);
     showNotification('⏳ Загрузка G-кода...', 'info');
@@ -12501,7 +12510,7 @@ window.loadGCodeFile = async function(event) {
         // Вместо этого просто обновляем цену напрямую
         if (priceInput) {
             const materialPrice = parseFloat(document.getElementById('manual-price')?.value) || 1600;
-            const cost = (filamentUsed / 1000) * materialPrice;
+            const cost = (filamentWeight / 1000) * materialPrice;
             priceInput.textContent = Math.round(cost) + ' ₽';
             console.log('✅ price-val (материал) обновлён:', Math.round(cost), '₽');
         }
