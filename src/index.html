@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <!-- ✅ КРИТИЧНО: Первая строка - кодировка -->
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="3D MONOLITH — Профессиональная система управления студией 3D-печати">
+    
+    <!-- Content Security Policy -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' blob: data:; script-src 'self' 'unsafe-inline' 'unsafe-eval' blob: data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://www.google-analytics.com; style-src 'self' 'unsafe-inline'; worker-src 'self' blob: data:; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https: blob:; connect-src 'self' blob: https://www.google-analytics.com;">
+    
+    <title>3D MONOLITH 2026 — MODULAR EDITION</title>
+    
+    <!-- ✅ Стили с указанием кодировки -->
+    <link rel="stylesheet" href="src/styles/main.css" charset="UTF-8">
+    
+    <!-- Three.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/STLLoader.min.js"></script>
+    
+    <!-- ✅ Модули ядра (порядок важен!) -->
+    <script charset="UTF-8" src="src/core/utils.js"></script>
+    <script charset="UTF-8" src="src/core/config.js"></script>
+    <script charset="UTF-8" src="src/core/storage.js"></script>
+    <script charset="UTF-8" src="src/core/crypto.js"></script>
+    
+    <!-- ✅ Модули приложения -->
+    <script charset="UTF-8" src="src/modules/calculator.js"></script>
+    <script charset="UTF-8" src="src/modules/calculator-advanced.js"></script>
+    <script charset="UTF-8" src="src/modules/materials.js"></script>
+    <script charset="UTF-8" src="src/modules/printers.js"></script>
+    <script charset="UTF-8" src="src/modules/printer-system.js"></script>
+    <script charset="UTF-8" src="src/modules/sla-cost-calculator.js"></script>
+    <script charset="UTF-8" src="src/modules/uvtools-bridge.js"></script>
+    <script charset="UTF-8" src="src/ai-knowledge/self-learning.js"></script>
+    <script charset="UTF-8" src="src/modules/ai-engineer.js"></script>
+</head>
+<body>
+    <!-- ✅ Проверка кодировки при загрузке -->
+    <script>
+        window.addEventListener('DOMContentLoaded', () => {
+            console.log('🔤 Кодировка страницы:', document.characterSet);
+            console.log('📦 3D MONOLITH Modular Edition загружен');
+            
+            if (document.characterSet !== 'UTF-8') {
+                console.error('❌ WARNING: Кодировка не UTF-8!');
+            }
+            
+            // Проверка работы кириллицы
+            const testEl = document.createElement('div');
+            testEl.textContent = 'Тест: Привет мир!';
+            console.log('✅ Кириллица:', testEl.textContent);
+        });
+    </script>
+    
+    <!-- Основной контент -->
+    <div id="app">
+        <h1>3D MONOLITH — Система управления</h1>
+        <p>Модульная версия с правильной кодировкой UTF-8</p>
+        
+        <!-- Тест работы модулей -->
+        <div id="module-test">
+            <h2>Статус модулей:</h2>
+            <ul>
+                <li>Utils: <span id="utils-status">❓</span></li>
+                <li>Config: <span id="config-status">❓</span></li>
+                <li>Storage: <span id="storage-status">❓</span></li>
+                <li>Crypto: <span id="crypto-status">❓</span></li>
+                <li>Calculator: <span id="calculator-status">❓</span></li>
+                <li>Calculator Advanced: <span id="calculator-advanced-status">❓</span></li>
+                <li>Materials: <span id="materials-status">❓</span></li>
+                <li>Printers: <span id="printers-status">❓</span></li>
+                <li>Printer System: <span id="printer-system-status">❓</span></li>
+                <li>SLA Cost Calculator: <span id="sla-cost-calculator-status">❓</span></li>
+                <li>UVTools Bridge: <span id="uvtools-bridge-status">❓</span></li>
+                <li>Self Learning: <span id="self-learning-status">❓</span></li>
+                <li>AI Engineer: <span id="ai-engineer-status">❓</span></li>
+            </ul>
+        </div>
+    </div>
+    
+    <!-- ✅ Финальная проверка -->
+    <script>
+        setTimeout(() => {
+            const status = {
+                utils: typeof window.escapeHtml === 'function',
+                config: typeof window.APP_CONFIG === 'object',
+                storage: typeof window.StorageManager === 'object',
+                crypto: typeof window.CryptoUtils === 'object',
+                calculator: typeof window.Calculator === 'object',
+                calculatorAdvanced: typeof window.CalculatorAdvanced === 'object' || typeof window.AdvancedCalculator !== 'undefined',
+                materials: typeof window.Materials === 'object' || typeof window.MaterialsManager !== 'undefined',
+                printers: typeof window.Printers === 'object' || typeof window.PrinterManager !== 'undefined',
+                printerSystem: typeof window.PrinterSystem === 'object',
+                slaCostCalculator: typeof window.SLACostCalculator === 'object',
+                uvtoolsBridge: typeof window.UVToolsBridge === 'object' || typeof window.UVTools !== 'undefined',
+                selfLearning: typeof window.SelfLearning === 'object' || typeof window.AIKnowledge !== 'undefined',
+                aiEngineer: typeof window.AIEngineer === 'object' || typeof window.AIEngineerModule !== 'undefined'
+            };
+
+            document.getElementById('utils-status').textContent = status.utils ? '✅' : '❌';
+            document.getElementById('config-status').textContent = status.config ? '✅' : '❌';
+            document.getElementById('storage-status').textContent = status.storage ? '✅' : '❌';
+            document.getElementById('crypto-status').textContent = status.crypto ? '✅' : '❌';
+            document.getElementById('calculator-status').textContent = status.calculator ? '✅' : '❌';
+            document.getElementById('calculator-advanced-status').textContent = status.calculatorAdvanced ? '✅' : '❌';
+            document.getElementById('materials-status').textContent = status.materials ? '✅' : '❌';
+            document.getElementById('printers-status').textContent = status.printers ? '✅' : '❌';
+            document.getElementById('printer-system-status').textContent = status.printerSystem ? '✅' : '❌';
+            document.getElementById('sla-cost-calculator-status').textContent = status.slaCostCalculator ? '✅' : '❌';
+            document.getElementById('uvtools-bridge-status').textContent = status.uvtoolsBridge ? '✅' : '❌';
+            document.getElementById('self-learning-status').textContent = status.selfLearning ? '✅' : '❌';
+            document.getElementById('ai-engineer-status').textContent = status.aiEngineer ? '✅' : '❌';
+
+            const allLoaded = Object.values(status).every(s => s);
+            console.log(allLoaded ? '✅ Все модули загружены' : '❌ Ошибка загрузки модулей');
+        }, 100);
+    </script>
+</body>
+</html>

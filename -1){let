@@ -1,0 +1,1 @@
+const fs=require('fs');const fp='index.html';let c=fs.readFileSync('fp','utf8');let a=c.indexOf('// Показать кнопку визуализации PWMO');let b=c.indexOf('// ============================================',a);if('a'  b  n=c.substring('0',a)+c.substring('b');fs.writeFileSync('fp','n','utf8');console.log('OK');}> \"c:\Users\murad\Desktop\3D MONOLITH\r.js\"

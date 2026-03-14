@@ -1,0 +1,56 @@
+{
+  "name": "3d-monolith-studio",
+  "version": "2.0.0",
+  "description": "Система управления студией 3D-печати",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron . --ignore-gpu-blacklist --enable-gpu-rasterization --enable-webgl --enable-webgl2 --disable-software-rasterizer --use-gl=angle --use-angle=d3d11 --force_high_performance_gpu --disable-direct-composition --enable-zero-copy",
+    "build": "electron-builder",
+    "build:win": "electron-builder --win",
+    "build:mac": "electron-builder --mac",
+    "build:linux": "electron-builder --linux",
+    "remove-pwmo": "node remove.js"
+  },
+  "keywords": [
+    "3d-printing",
+    "crm",
+    "calculator",
+    "slicer"
+  ],
+  "author": "3D MONOLITH",
+  "license": "MIT",
+  "devDependencies": {
+    "electron": "^28.0.0",
+    "electron-builder": "^24.9.1"
+  },
+  "build": {
+    "appId": "com.monolith3d.app",
+    "productName": "3D MONOLITH Studio",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "index.html",
+      "main.js",
+      "preload.js"
+    ],
+    "win": {
+      "target": "nsis",
+      "icon": "icon.ico"
+    },
+    "mac": {
+      "target": "dmg",
+      "icon": "icon.icns"
+    },
+    "linux": {
+      "target": "AppImage",
+      "icon": "icon.png"
+    }
+  },
+  "dependencies": {
+    "@mlc-ai/web-llm": "^0.2.81",
+    "electron-store": "^8.2.0",
+    "node-llama-cpp": "^2.8.0",
+    "iconv-lite": "^0.6.3"
+  }
+}
