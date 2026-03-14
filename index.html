@@ -860,6 +860,8 @@ to { transform: rotate(360deg); }
       <div class="stat-box"><span>ГАБАРИТЫ (XYZ)</span><b id="st-dims">0 x 0 x 0</b></div>
       <div class="stat-box"><span>ОБЪЕМ</span><b id="st-v">0 см³</b></div>
     </div>
+    <!-- 🔧 ПОДСКАЗКА О РАЗНИЦЕ STL И G-CODE -->
+    <div id="file-type-hint" style="text-align: center; font-size: 10px; color: #64748b; margin-top: 8px; display: none;"></div>
     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px;">
       <button onclick="generateDoc()" style="background:#10b981;" class="btn-sec">📄 ПЕЧАТЬ КП</button>
       <button id="send-to-crm" disabled onclick="transferBoxToCRM()">➕ ДОБАВИТЬ В ОЧЕРЕДЬ</button>
@@ -12456,6 +12458,13 @@ window.loadGCodeFile = async function(event) {
             console.log('✅ price-val (материал) обновлён:', Math.round(cost), '₽');
         }
 
+        // 🔧 ПОДСКАЗКА О ТИПЕ ФАЙЛА
+        const hintEl = document.getElementById('file-type-hint');
+        if (hintEl) {
+            hintEl.style.display = 'block';
+            hintEl.innerHTML = '🟢 G-код: реальный расход пластика (стек + периметр + инфилл)';
+        }
+
         // 🔧 ЗАПОЛНЯЕМ ГАБАРИТЫ ПРИНУДИТЕЛЬНО
         const dimsElement = document.getElementById('st-dims');
         if (dimsElement && geometry.boundingBox) {
@@ -12646,8 +12655,15 @@ window.visualize3DModel = function(result) {
     
     // Фокусировка камеры
     focusCameraOnModel(result.geometry);
-    
+
     console.log('✅ [3D] Визуализация завершена');
+    
+    // 🔧 ПОДСКАЗКА О ТИПЕ ФАЙЛА
+    const hintEl = document.getElementById('file-type-hint');
+    if (hintEl) {
+        hintEl.style.display = 'block';
+        hintEl.innerHTML = '🔵 STL: геометрия модели (100% заполнение) — реальный расход зависит от настроек слайсера';
+    }
 };
 
 window.focusCameraOnModel = function(geometry) {
