@@ -4,3 +4,6 @@ dist/
 *.cpuprofile
 electron-error.log
 .env
+*.zip
+*.jfif
+*.ps1
