@@ -12589,15 +12589,15 @@ window.loadUniversal3DFile = async function(file) {
     }
 
     showNotification('⏳ Загрузка 3D модели...', 'info');
-    
+
     try {
         const result = await window.Universal3DLoader.loadFile(file);
-        
+
         console.log('✅ [3D] Файл загружен:', result.stats);
-        
-        // Визуализация
-        visualize3DModel(result);
-        
+
+        // 🔧 ВИЗУАЛИЗАЦИЯ ЧЕРЕЗ ВОРКЕР (уже настроено)
+        // visualize3DModel(result); // ❌ НЕ вызываем — воркер уже загрузил!
+
         // Обновление статистики
         update3DStats(result.stats);
         
