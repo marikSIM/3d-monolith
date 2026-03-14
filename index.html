@@ -3839,12 +3839,23 @@ window.autoCalculate = function() {
         if (pBoxEl) pBoxEl.style.opacity = total > 0 ? "1" : "0";
         
         // 10. Обновляем статистику
-        if (document.getElementById('st-w-net')) document.getElementById('st-w-net').innerText = netW.toFixed(1) + ' г';
-        if (document.getElementById('st-w-total')) document.getElementById('st-w-total').innerText = totalW.toFixed(1) + ' г';
-        if (document.getElementById('st-v')) document.getElementById('st-v').innerText = v.toFixed(1) + ' см³';
-        if (document.getElementById('st-dims')) {
+        // 🔧 ПРОВЕРЯЕМ — если данные уже есть (загружены из файла), НЕ перезаписываем!
+        const stNetEl = document.getElementById('st-w-net');
+        const stTotalEl = document.getElementById('st-w-total');
+        const stVolEl = document.getElementById('st-v');
+        const stDimsEl = document.getElementById('st-dims');
+        
+        // Получаем текущие значения из панели
+        const currentWeight = parseFloat(stTotalEl?.innerText) || 0;
+        const currentVol = parseFloat(stVolEl?.innerText) || 0;
+        
+        // Если данные уже есть (>0), сохраняем их
+        if (stNetEl && currentWeight === 0) stNetEl.innerText = netW.toFixed(1) + ' г';
+        if (stTotalEl && currentWeight === 0) stTotalEl.innerText = totalW.toFixed(1) + ' г';
+        if (stVolEl && currentVol === 0) stVolEl.innerText = v.toFixed(1) + ' см³';
+        if (stDimsEl && currentWeight === 0) {
             const size = window.modelSize || {x:0, y:0, z:0};
-            document.getElementById('st-dims').innerText = `${Math.round(size.x)} x ${Math.round(size.y)} x ${Math.round(size.z)} мм`;
+            stDimsEl.innerText = `${Math.round(size.x)} x ${Math.round(size.y)} x ${Math.round(size.z)} мм`;
         }
         
         // 11. Обновляем анализ себестоимости
