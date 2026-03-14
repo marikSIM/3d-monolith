@@ -12418,19 +12418,28 @@ window.loadGCodeFile = async function(event) {
         
         // Расчёт объёма и веса из G-code
         const pathLength = window.GCodeParser.calculatePathLength(result.commands);
-        let filamentUsed = (pathLength * 0.003) / 1000; // Переводим мм³ в см³
-        let volumeCm3 = filamentUsed / 1.24; // Плотность PLA (г/см³)
         
-        console.log('📊 [GCode] Расход:', filamentUsed.toFixed(2), 'г, Объём:', volumeCm3.toFixed(2), 'см³');
+        // 🔧 ПРАВИЛЬНЫЙ РАСЧЁТ:
+        // 1. Длина пути (мм) × сечение филамента (мм²) = объём (мм³)
+        // 2. Объём (мм³) / 1000 = объём (см³)
+        // 3. Объём (см³) × плотность (г/см³) = вес (г)
         
+        const filamentVolumeMm3 = pathLength * 0.003;  // мм³ (сечение для 1.75мм)
+        const filamentVolumeCm3 = filamentVolumeMm3 / 1000;  // см³
+        const filamentWeight = filamentVolumeCm3 * 1.24;  // г (плотность PLA)
+        
+        console.log('📊 [GCode] Длина пути:', pathLength.toFixed(0), 'мм');
+        console.log('📊 [GCode] Объём:', filamentVolumeCm3.toFixed(2), 'см³');
+        console.log('📊 [GCode] Вес:', filamentWeight.toFixed(2), 'г');
+
         if (volumeInput) {
-            volumeInput.textContent = volumeCm3.toFixed(2) + ' см³';
-            console.log('✅ st-v обновлён:', volumeCm3.toFixed(2), 'см³');
+            volumeInput.textContent = filamentVolumeCm3.toFixed(2) + ' см³';
+            console.log('✅ st-v обновлён:', filamentVolumeCm3.toFixed(2), 'см³');
         }
-        
+
         if (weightInput) {
-            weightInput.textContent = filamentUsed.toFixed(1) + ' г';
-            console.log('✅ st-w-total обновлён:', filamentUsed.toFixed(1), 'г');
+            weightInput.textContent = filamentWeight.toFixed(1) + ' г';
+            console.log('✅ st-w-total обновлён:', filamentWeight.toFixed(1), 'г');
         }
         
         // 🔧 ОБНОВЛЯЕМ ГАБАРИТЫ ИЗ G-CODE
