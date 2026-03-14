@@ -12402,9 +12402,6 @@ window.loadGCodeFile = async function(event) {
             console.log('✅ price-val (материал) обновлён:', Math.round(cost), '₽');
         }
 
-        // 🔧 ВЫКЛЮЧАЕМ ЗАЩИТУ И ВЫЗЫВАЕМ autoCalculate ДЛЯ ПОЛНОГО РАСЧЁТА
-        window.isProcessingFile = false;
-        
         // 🔧 ЗАПОЛНЯЕМ ГАБАРИТЫ ПРИНУДИТЕЛЬНО
         const dimsElement = document.getElementById('st-dims');
         if (dimsElement && geometry.boundingBox) {
@@ -12413,16 +12410,20 @@ window.loadGCodeFile = async function(event) {
             dimsElement.textContent = bboxSize.x.toFixed(0) + ' x ' + bboxSize.y.toFixed(0) + ' x ' + bboxSize.z.toFixed(0) + ' мм';
             console.log('✅ st-dims обновлён:', bboxSize.x.toFixed(0), 'x', bboxSize.y.toFixed(0), 'x', bboxSize.z.toFixed(0), 'мм');
         }
-        
-        // Вызываем autoCalculate через 500мс, чтобы все поля обновились
+
+        // 🔧 НЕ СНИМАЕМ isProcessingFile — autoCalculate сам проверит
+        // Вызываем autoCalculate через 1500мс, чтобы все поля обновились
         setTimeout(() => {
             if (typeof window.autoCalculate === 'function') {
-                window.autoCalculate();
                 console.log('✅ autoCalculate вызван для полного расчёта (материал + время + электричество)');
+                window.autoCalculate();
             }
-        }, 500);
-        
-        console.log('✅ Все поля заполнены, autoCalculate вызван для полного расчёта');
+            // Снимаем защиту ПОСЛЕ завершения расчёта
+            window.isProcessingFile = false;
+            console.log('✅ isProcessingFile снят, данные зафиксированы');
+        }, 1500);
+
+        console.log('✅ Все поля заполнены, autoCalculate запланирован');
 
         showNotification(
             `✅ G-код загружен!\n` +
