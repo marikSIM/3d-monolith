@@ -6556,12 +6556,13 @@ window.worker.onmessage = function(e) {
     }
 
     console.log("✅ Данные от воркера получены:", {
-        объём: d.vol + " см³",
+        объём: (d.vol / 1000).toFixed(2) + " см³",
         треугольники: d.pts ? (d.pts.length / 18) : 0
     });
 
     // Сохранение данных модели
-    window.realVol = d.vol;
+    // 🔧 ПРЕОБРАЗУЕМ мм³ в см³ (делим на 1000)
+    window.realVol = d.vol / 1000;
     window.modelSize = {
         x: (d.max[0] - d.min[0]).toFixed(1),
         y: (d.max[1] - d.min[1]).toFixed(1),
